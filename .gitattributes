@@ -1,0 +1,7 @@
+# Auto detect text files and perform LF normalization
+*               text=auto
+
+*.kt            text eol=crlf diff=kotlin
+*.xml           text eol=crlf diff=xml
+*.gradle        text eol=crlf diff=gradle
+*.properties    text eol=crlf merge=union
