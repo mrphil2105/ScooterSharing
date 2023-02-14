@@ -29,6 +29,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 
+/**
+ * The main activity class that loads on application startup.
+ */
 class MainActivity : AppCompatActivity() {
     companion object {
         private val TAG = MainActivity::class.qualifiedName
@@ -38,6 +41,11 @@ class MainActivity : AppCompatActivity() {
 
     private val scooter: Scooter = Scooter("", "")
 
+    /**
+     * Performs initialization of the activity, by creating view bindings and setting the content view.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,6 +71,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(mainBinding.root)
     }
 
+    /**
+     * Prints the scooter details to the log.
+     */
     private fun showMessage() {
         Log.d(TAG, scooter.toString())
     }

@@ -24,7 +24,16 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo
 
+/**
+ * A data class that represents a scooter with a name and location.
+ *
+ * @param name The name of the scooter.
+ * @param location The location of the scooter.
+ */
 data class Scooter(var name: String, var location: String) {
+    /**
+     * Returns a human-readable string with the scooter details.
+     */
     override fun toString(): String {
         return "[Scooter] $name is placed at $location."
     }
