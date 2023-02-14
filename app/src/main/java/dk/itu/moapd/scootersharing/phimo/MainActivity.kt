@@ -25,18 +25,16 @@ SOFTWARE.
 package dk.itu.moapd.scootersharing.phimo
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 
 /**
  * The main activity class that loads on application startup.
  */
 class MainActivity : AppCompatActivity() {
-    companion object {
-        private val TAG = MainActivity::class.qualifiedName
-    }
-
     private lateinit var mainBinding: ActivityMainBinding
 
     private val scooter: Scooter = Scooter("", "")
@@ -63,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                     editTextName.text.clear()
                     editTextLocation.text.clear()
 
-                    showMessage()
+                    showMessage(view)
                 }
             }
         }
@@ -72,9 +70,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Prints the scooter details to the log.
+     * Displays a [Snackbar] at the bottom indicating ride start using specified scooter.
      */
-    private fun showMessage() {
-        Log.d(TAG, scooter.toString())
+    private fun showMessage(view: View) {
+        val message = "Ride started using scooter ${scooter.name} at location ${scooter.location}."
+        val snackbar = Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_SHORT)
+        snackbar.show()
     }
 }
