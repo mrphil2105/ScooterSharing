@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:text="Name:" />
+            android:text="@string/name_label" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:text="Location:" />
+            android:text="@string/location_label" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:layout_width="140dp"
         android:layout_height="20pt"
         android:layout_gravity="center_horizontal"
-        android:text="Start Ride"
+        android:text="@string/start_ride_button"
         android:id="@+id/start_ride_button" />
 
 </LinearLayout>
