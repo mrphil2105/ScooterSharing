@@ -24,11 +24,9 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 
 /**
@@ -36,8 +34,6 @@ import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
  */
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding: ActivityMainBinding
-
-    private val scooter: Scooter = Scooter("", "", System.currentTimeMillis())
 
     /**
      * Performs initialization of the activity, by creating view bindings and setting the content view.
@@ -50,31 +46,17 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
 
         with (mainBinding) {
-            startRideButton.setOnClickListener { view ->
-                if (editTextName.text.isNotEmpty() && editTextLocation.text.isNotEmpty()) {
-                    val name = editTextName.text.toString().trim()
-                    val location = editTextLocation.text.toString().trim()
+            startRideButton.setOnClickListener {
+                val intent = Intent(baseContext, StartRideActivity::class.java)
+                startActivity(intent)
+            }
 
-                    scooter.name = name
-                    scooter.location = location
-
-                    editTextName.text.clear()
-                    editTextLocation.text.clear()
-
-                    showMessage(view)
-                }
+            updateRideButton.setOnClickListener {
+                val intent = Intent(baseContext, UpdateRideActivity::class.java)
+                startActivity(intent)
             }
         }
 
         setContentView(mainBinding.root)
-    }
-
-    /**
-     * Displays a [Snackbar] at the bottom indicating ride start using specified scooter.
-     */
-    private fun showMessage(view: View) {
-        val message = "Ride started using scooter ${scooter.name} at location ${scooter.location}."
-        val snackbar = Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_SHORT)
-        snackbar.show()
     }
 }
