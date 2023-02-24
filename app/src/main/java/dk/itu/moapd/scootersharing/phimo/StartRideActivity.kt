@@ -34,7 +34,7 @@ import dk.itu.moapd.scootersharing.phimo.databinding.ActivityStartRideBinding
 class StartRideActivity : AppCompatActivity() {
     private lateinit var startRideBinding: ActivityStartRideBinding
 
-    private val scooter: Scooter = Scooter("", "")
+    private val scooter: Scooter = Scooter("", "", System.currentTimeMillis())
 
     /**
      * Performs initialization of the activity, by creating view bindings and setting the content view.

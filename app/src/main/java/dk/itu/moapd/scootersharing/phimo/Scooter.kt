@@ -24,13 +24,25 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  * A data class that represents a scooter with a name and location.
  *
  * @param name The name of the scooter.
  * @param location The location of the scooter.
  */
-data class Scooter(var name: String, var location: String) {
+data class Scooter(var name: String, var location: String, var timestamp: Long) {
+    /**
+     * Returns a human-readable string representation of the [timestamp].
+     */
+    fun getTime(): String {
+        val date = Date(timestamp)
+        val format = SimpleDateFormat("yyyy/MM/dd HH:mm")
+        return format.format(date)
+    }
+
     /**
      * Returns a human-readable string with the scooter details.
      */

@@ -37,7 +37,7 @@ import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding: ActivityMainBinding
 
-    private val scooter: Scooter = Scooter("", "")
+    private val scooter: Scooter = Scooter("", "", System.currentTimeMillis())
 
     /**
      * Performs initialization of the activity, by creating view bindings and setting the content view.
@@ -49,14 +49,14 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
 
-        with(mainBinding) {
+        with (mainBinding) {
             startRideButton.setOnClickListener { view ->
                 if (editTextName.text.isNotEmpty() && editTextLocation.text.isNotEmpty()) {
                     val name = editTextName.text.toString().trim()
                     val location = editTextLocation.text.toString().trim()
 
-                    scooter.name = name;
-                    scooter.location = location;
+                    scooter.name = name
+                    scooter.location = location
 
                     editTextName.text.clear()
                     editTextLocation.text.clear()
