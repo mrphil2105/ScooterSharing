@@ -47,6 +47,6 @@ data class Scooter(var name: String, var location: String, var timestamp: Long) 
      * Returns a human-readable string with the scooter details.
      */
     override fun toString(): String {
-        return "[Scooter] $name is placed at $location."
+        return "[Scooter] $name is placed at $location. Last updated at ${getTime()}."
     }
 }
