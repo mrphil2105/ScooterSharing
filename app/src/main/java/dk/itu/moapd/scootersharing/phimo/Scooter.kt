@@ -33,7 +33,7 @@ import java.util.*
  * @param name The name of the scooter.
  * @param location The location of the scooter.
  */
-data class Scooter(var name: String, var location: String, var timestamp: Long) {
+data class Scooter(val name: String, var location: String, var timestamp: Long) {
     /**
      * Returns a human-readable string representation of the [timestamp].
      */
