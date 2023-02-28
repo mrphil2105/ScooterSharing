@@ -34,7 +34,9 @@ import dk.itu.moapd.scootersharing.phimo.databinding.ActivityUpdateRideBinding
 class UpdateRideActivity : AppCompatActivity() {
     private lateinit var updateRideBinding: ActivityUpdateRideBinding
 
-    private val scooter: Scooter = Scooter("", "", System.currentTimeMillis())
+    companion object {
+        lateinit var ridesDB: RidesDB
+    }
 
     /**
      * Performs initialization of the activity, by creating view bindings and setting the content view.
@@ -43,6 +45,7 @@ class UpdateRideActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ridesDB = RidesDB.get(this)
 
         updateRideBinding = ActivityUpdateRideBinding.inflate(layoutInflater)
 

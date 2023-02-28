@@ -35,6 +35,10 @@ import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding: ActivityMainBinding
 
+    companion object {
+        lateinit var ridesDB: RidesDB
+    }
+
     /**
      * Performs initialization of the activity, by creating view bindings and setting the content view.
      *
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ridesDB = RidesDB.get(this)
 
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
 
