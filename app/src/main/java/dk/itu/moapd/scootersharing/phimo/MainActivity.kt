@@ -26,6 +26,7 @@ package dk.itu.moapd.scootersharing.phimo
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         lateinit var ridesDB: RidesDB
+        lateinit var adapter: ScooterArrayAdapter
     }
 
     /**
@@ -47,6 +49,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ridesDB = RidesDB.get(this)
+        val data = ridesDB.getRidesList()
+        adapter = ScooterArrayAdapter(this, R.layout.scooter_list_item, data)
 
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -60,6 +64,13 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(baseContext, UpdateRideActivity::class.java)
                 startActivity(intent)
             }
+
+            listRidesButton.setOnClickListener {
+                scooterList.visibility = if (scooterList.visibility == View.VISIBLE)
+                    View.INVISIBLE else View.VISIBLE
+            }
+
+            scooterList.adapter = adapter
         }
 
         setContentView(mainBinding.root)

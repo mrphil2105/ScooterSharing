@@ -2,6 +2,7 @@
     <string name="app_name">Scooter Sharing</string>
     <string name="start_ride_button">Start Ride</string>
     <string name="update_ride_button">Update Ride</string>
+    <string name="list_rides_button">List Rides</string>
     <string name="name_label">Name:</string>
     <string name="location_label">Location:</string>
 </resources>
