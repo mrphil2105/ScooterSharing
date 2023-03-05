@@ -24,11 +24,8 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityUpdateRideBinding
 
 class UpdateRideActivity : AppCompatActivity() {
@@ -50,31 +47,18 @@ class UpdateRideActivity : AppCompatActivity() {
         updateRideBinding = ActivityUpdateRideBinding.inflate(layoutInflater)
 
         with (updateRideBinding) {
-            updateRideButton.setOnClickListener { view ->
+            updateRideButton.setOnClickListener {
                 if (editTextName.text.isNotEmpty() && editTextLocation.text.isNotEmpty()) {
-                    val name = editTextName.text.toString().trim()
                     val location = editTextLocation.text.toString().trim()
-
-                    scooter.name = name
-                    scooter.location = location
-
-                    editTextName.text.clear()
-                    editTextLocation.text.clear()
-
-                    showMessage(view)
+                    ridesDB.updateCurrentScooter(location)
                 }
             }
+
+            val scooter = ridesDB.getCurrentScooter()
+            editTextName.setText(scooter.name)
+            editTextLocation.setText(scooter.location)
         }
 
         setContentView(updateRideBinding.root)
-    }
-
-    /**
-     * Displays a [Snackbar] at the bottom indicating ride start using specified scooter.
-     */
-    private fun showMessage(view: View) {
-        val message = "Ride started using scooter ${scooter.name} at location ${scooter.location}."
-        val snackbar = Snackbar.make(view, message, BaseTransientBottomBar.LENGTH_SHORT)
-        snackbar.show()
     }
 }
