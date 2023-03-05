@@ -24,9 +24,11 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo
 
-import androidx.appcompat.app.AppCompatActivity
+import android.R
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityStartRideBinding
@@ -45,6 +47,7 @@ class StartRideActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         ridesDB = RidesDB.get(this)
 
         startRideBinding = ActivityStartRideBinding.inflate(layoutInflater)
@@ -67,6 +70,16 @@ class StartRideActivity : AppCompatActivity() {
         }
 
         setContentView(startRideBinding.root)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
