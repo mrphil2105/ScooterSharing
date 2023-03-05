@@ -6,20 +6,28 @@ import kotlin.collections.ArrayList
 
 class RidesDB private constructor(context: Context) {
     private val rides = ArrayList<Scooter>()
-    private lateinit var current: Scooter
+    private var current: Scooter
 
     companion object : RidesDBHolder<RidesDB, Context>(::RidesDB)
 
     init {
         rides.add(
-            Scooter(" CPH001 ", " ITU ", randomDate())
+            Scooter("CPH001", "ITU", randomDate())
         )
         rides.add(
-            Scooter(" CPH002 ", " Fields ", randomDate())
+            Scooter("CPH002", "Fields", randomDate())
         )
         rides.add(
-            Scooter(" CPH003 ", " Lufthavn ", randomDate())
+            Scooter("CPH003", "Airport", randomDate())
         )
+        rides.add(
+            Scooter("CPH004", "Fisketorvet", randomDate())
+        )
+        rides.add(
+            Scooter("CPH005", "DTU", randomDate())
+        )
+
+        current = rides.last()
     }
 
     fun getRidesList(): List<Scooter> {
