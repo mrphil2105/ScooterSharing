@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
 
 class UpdateRideFragment : Fragment() {
@@ -37,7 +38,7 @@ class UpdateRideFragment : Fragment() {
                     val location = editTextLocation.text.toString().trim()
                     ridesDB.updateCurrentScooter(location)
 
-                    // TODO: Navigate to 'MainFragment'.
+                    Navigation.findNavController(view).popBackStack()
                 }
             }
 

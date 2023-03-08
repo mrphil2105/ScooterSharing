@@ -1,11 +1,11 @@
 package dk.itu.moapd.scootersharing.phimo
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -37,13 +37,13 @@ class MainFragment : Fragment() {
 
         with(mainBinding) {
             startRideButton.setOnClickListener {
-                val intent = Intent(context, StartRideActivity::class.java)
-                startActivity(intent)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_startRideFragment)
             }
 
             updateRideButton.setOnClickListener {
-                val intent = Intent(context, UpdateRideActivity::class.java)
-                startActivity(intent)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_updateRideFragment)
             }
 
             listRidesButton.setOnClickListener {

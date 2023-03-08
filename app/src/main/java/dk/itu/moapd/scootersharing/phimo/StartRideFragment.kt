@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
@@ -43,7 +44,7 @@ class StartRideFragment : Fragment() {
                     val scooter = ridesDB.getCurrentScooter()
                     showMessage(scooter, view)
 
-                    // TODO: Navigate to 'MainFragment'.
+                    Navigation.findNavController(view).popBackStack()
                 }
             }
 
