@@ -41,6 +41,10 @@ class RidesDB private constructor(context: Context) {
         current = scooter
     }
 
+    fun removeScooter(index: Int) {
+        rides.removeAt(index)
+    }
+
     fun updateCurrentScooter(location: String) {
         current.location = location
         current.timestamp = randomDate() // Update timestamp to reflect change
