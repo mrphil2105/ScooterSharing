@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -20,7 +21,7 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
         ridesDB = RidesDB.get(requireContext())
         val data = ridesDB.getRidesList()
-        adapter = ScooterArrayAdapter(requireContext(), R.layout.scooter_list_item, data)
+        adapter = ScooterArrayAdapter(data)
     }
 
     override fun onCreateView(
@@ -51,6 +52,7 @@ class MainFragment : Fragment() {
                     View.INVISIBLE else View.VISIBLE
             }
 
+            scooterList.layoutManager = LinearLayoutManager(context)
             scooterList.adapter = adapter
         }
     }

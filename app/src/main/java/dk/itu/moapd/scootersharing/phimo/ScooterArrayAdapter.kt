@@ -1,38 +1,31 @@
 package dk.itu.moapd.scootersharing.phimo
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import dk.itu.moapd.scootersharing.phimo.databinding.ScooterListItemBinding
 
-class ScooterArrayAdapter(context: Context, private var resource: Int, data: List<Scooter>) :
-    ArrayAdapter<Scooter>(context, R.layout.scooter_list_item, data) {
-    private class ViewHolder(view: View) {
-        val name: TextView = view.findViewById(R.id.scooter_name)
-        val location: TextView = view.findViewById(R.id.scooter_location)
-        val timestamp: TextView = view.findViewById(R.id.scooter_timestamp)
+class ScooterArrayAdapter(private val data: List<Scooter>) :
+    RecyclerView.Adapter<ScooterArrayAdapter.ViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ScooterListItemBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view = convertView
-        val viewHolder: ViewHolder
+    override fun getItemCount() = data.size
 
-        if (view == null) {
-            val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(resource, parent, false)
-            viewHolder = ViewHolder(view)
-        } else {
-            viewHolder = view.tag as ViewHolder
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val scooter = data[position]
+        holder.bind(scooter)
+    }
+
+    class ViewHolder(private val binding: ScooterListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(scooter: Scooter) {
+            binding.scooterName.text = scooter.name
+            binding.scooterLocation.text = scooter.location
+            binding.scooterTimestamp.text = scooter.getTime()
         }
-
-        val scooter = getItem(position)
-        viewHolder.name.text = scooter?.name
-        viewHolder.location.text = scooter?.location
-        viewHolder.timestamp.text = scooter?.getTime()
-
-        view?.tag = viewHolder
-        return view!!
     }
 }
