@@ -5,4 +5,6 @@
     <string name="list_rides_button">List Rides</string>
     <string name="name_label">Name:</string>
     <string name="location_label">Location:</string>
+    <string name="accept_option">Yes</string>
+    <string name="decline_option">No</string>
 </resources>

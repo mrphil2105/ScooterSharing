@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -65,9 +66,18 @@ class MainFragment : Fragment() {
             ) = true
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val pos = viewHolder.bindingAdapterPosition
-                ridesDB.removeScooter(pos)
-                adapter.notifyItemRemoved(pos)
+                AlertDialog.Builder(requireContext())
+                    .setMessage("Are you sure you want to delete the scooter?")
+                    .setPositiveButton(R.string.accept_option) { _, _ ->
+                        val pos = viewHolder.bindingAdapterPosition
+                        ridesDB.removeScooter(pos)
+                        adapter.notifyItemRemoved(pos)
+                    }.setNegativeButton(R.string.decline_option) { _, _ ->
+                        val pos = viewHolder.bindingAdapterPosition
+                        // Used to get rid of the swiped state on the item.
+                        adapter.notifyItemChanged(pos)
+                    }.create()
+                    .show()
             }
 
             override fun onChildDraw(
