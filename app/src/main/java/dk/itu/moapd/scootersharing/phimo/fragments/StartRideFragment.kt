@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import dk.itu.moapd.scootersharing.phimo.models.RidesDB
+import dk.itu.moapd.scootersharing.phimo.models.Scooter
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
 
 class StartRideFragment : Fragment() {

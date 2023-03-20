@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.models
 
 import android.content.Context
 import java.util.*

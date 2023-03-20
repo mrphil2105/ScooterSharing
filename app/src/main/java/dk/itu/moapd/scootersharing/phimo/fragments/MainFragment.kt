@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.fragments
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -16,6 +16,9 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dk.itu.moapd.scootersharing.phimo.R
+import dk.itu.moapd.scootersharing.phimo.models.RidesDB
+import dk.itu.moapd.scootersharing.phimo.adapters.ScooterArrayAdapter
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
 import kotlin.math.roundToInt
 

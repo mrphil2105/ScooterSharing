@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.models
 
 import java.text.SimpleDateFormat
 import java.util.*

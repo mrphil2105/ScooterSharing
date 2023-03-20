@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,4 +1,4 @@
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import dk.itu.moapd.scootersharing.phimo.R
+import dk.itu.moapd.scootersharing.phimo.models.RidesDB
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
 
 class UpdateRideFragment : Fragment() {

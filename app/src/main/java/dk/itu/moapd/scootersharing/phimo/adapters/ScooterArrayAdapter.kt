@@ -1,9 +1,10 @@
-package dk.itu.moapd.scootersharing.phimo
+package dk.itu.moapd.scootersharing.phimo.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dk.itu.moapd.scootersharing.phimo.databinding.ScooterListItemBinding
+import dk.itu.moapd.scootersharing.phimo.models.Scooter
 
 class ScooterArrayAdapter(private val data: List<Scooter>) :
     RecyclerView.Adapter<ScooterArrayAdapter.ViewHolder>() {

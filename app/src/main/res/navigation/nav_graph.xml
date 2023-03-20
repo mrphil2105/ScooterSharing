@@ -7,15 +7,15 @@
 
     <fragment
         android:id="@+id/startRideFragment"
-        android:name="dk.itu.moapd.scootersharing.phimo.StartRideFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.StartRideFragment"
         android:label="StartRideFragment" />
     <fragment
         android:id="@+id/updateRideFragment"
-        android:name="dk.itu.moapd.scootersharing.phimo.UpdateRideFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.UpdateRideFragment"
         android:label="UpdateRideFragment" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="dk.itu.moapd.scootersharing.phimo.MainFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
