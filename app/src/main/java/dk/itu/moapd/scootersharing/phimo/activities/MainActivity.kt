@@ -24,14 +24,18 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import dk.itu.moapd.scootersharing.phimo.databinding.ActivityMainBinding
 
 /**
  * The main activity class that loads on application startup.
  */
 class MainActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+
     /**
      * Performs initialization of the activity, by creating view bindings and setting the content view.
      *
@@ -39,7 +43,24 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (auth.currentUser == null) {
+            startLoginActivity()
+        }
+    }
+
+    private fun startLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
