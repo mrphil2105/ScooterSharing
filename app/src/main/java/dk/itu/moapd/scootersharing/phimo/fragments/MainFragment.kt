@@ -16,13 +16,16 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import dk.itu.moapd.scootersharing.phimo.R
-import dk.itu.moapd.scootersharing.phimo.models.RidesDB
 import dk.itu.moapd.scootersharing.phimo.adapters.ScooterArrayAdapter
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
+import dk.itu.moapd.scootersharing.phimo.models.RidesDB
 import kotlin.math.roundToInt
 
 class MainFragment : Fragment() {
+    private lateinit var auth: FirebaseAuth
+
     private lateinit var mainBinding: FragmentMainBinding
     private lateinit var swipeHelper: ItemTouchHelper
 
@@ -33,6 +36,9 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+
         ridesDB = RidesDB.get(requireContext())
         val data = ridesDB.getRidesList()
         adapter = ScooterArrayAdapter(data)
@@ -143,6 +149,12 @@ class MainFragment : Fragment() {
             listRidesButton.setOnClickListener {
                 scooterList.visibility = if (scooterList.visibility == View.VISIBLE)
                     View.INVISIBLE else View.VISIBLE
+            }
+
+            signOutButton.setOnClickListener {
+                auth.signOut()
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_loginActivity)
             }
 
             scooterList.layoutManager = LinearLayoutManager(context)

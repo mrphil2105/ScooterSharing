@@ -24,5 +24,12 @@
         <action
             android:id="@+id/action_mainFragment_to_updateRideFragment"
             app:destination="@id/updateRideFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
     </fragment>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="dk.itu.moapd.scootersharing.phimo.activities.LoginActivity"
+        android:label="LoginActivity" />
 </navigation>

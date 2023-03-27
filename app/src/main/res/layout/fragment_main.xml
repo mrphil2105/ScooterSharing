@@ -38,6 +38,13 @@
         android:text="@string/list_rides_button"
         android:id="@+id/list_rides_button" />
 
+    <Button
+        android:layout_width="140dp"
+        android:layout_height="20pt"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/sign_out_button"
+        android:id="@+id/sign_out_button" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp" />
