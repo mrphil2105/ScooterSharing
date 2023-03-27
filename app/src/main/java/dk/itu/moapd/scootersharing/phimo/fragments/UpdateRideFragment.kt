@@ -23,9 +23,7 @@ class UpdateRideFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         ridesBinding = FragmentRidesBinding.inflate(layoutInflater, container, false)
         return ridesBinding.root

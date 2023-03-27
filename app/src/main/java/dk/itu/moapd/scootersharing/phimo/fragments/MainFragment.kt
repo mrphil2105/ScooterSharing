@@ -45,9 +45,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         mainBinding = FragmentMainBinding.inflate(layoutInflater, container, false)
         return mainBinding.root
@@ -65,8 +63,7 @@ class MainFragment : Fragment() {
         val deleteColor = resources.getColor(android.R.color.holo_red_light, null)
 
         swipeHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT
+            0, ItemTouchHelper.LEFT
         ) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -85,8 +82,7 @@ class MainFragment : Fragment() {
                         val pos = viewHolder.bindingAdapterPosition
                         // Used to get rid of the swiped state on the item.
                         adapter.notifyItemChanged(pos)
-                    }.create()
-                    .show()
+                    }.create().show()
             }
 
             override fun onChildDraw(
@@ -124,13 +120,7 @@ class MainFragment : Fragment() {
                 deleteIcon.draw(canvas)
 
                 super.onChildDraw(
-                    canvas,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
                 )
             }
         })
@@ -165,7 +155,6 @@ class MainFragment : Fragment() {
 
     private val Int.dp
         get() = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            toFloat(), resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP, toFloat(), resources.displayMetrics
         ).roundToInt()
 }
