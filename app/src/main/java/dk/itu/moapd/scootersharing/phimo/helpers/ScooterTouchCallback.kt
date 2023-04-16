@@ -12,22 +12,19 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dk.itu.moapd.scootersharing.phimo.R
-import dk.itu.moapd.scootersharing.phimo.adapters.ScooterArrayAdapter
-import dk.itu.moapd.scootersharing.phimo.models.RidesDB
+import dk.itu.moapd.scootersharing.phimo.adapters.ScooterAdapter
 import kotlin.math.roundToInt
 
 // Swipe feature inspired by article: https://medium.com/getpowerplay/understanding-swipe-and-drag-gestures-in-recyclerview-cb3136beff20
 class ScooterTouchCallback(
     private val context: Context,
     private val resources: Resources,
-    private val adapter: ScooterArrayAdapter
+    private val adapter: ScooterAdapter
 ) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
     private val deleteIcon =
         ResourcesCompat.getDrawable(resources, R.drawable.baseline_delete_forever_24, null)!!
     private val deleteColor = resources.getColor(android.R.color.holo_red_light, null)
-
-    private val ridesDB = RidesDB.get(context)
 
     override fun onMove(
         recyclerView: RecyclerView,
@@ -40,7 +37,8 @@ class ScooterTouchCallback(
             .setMessage("Are you sure you want to delete the scooter?")
             .setPositiveButton(R.string.accept_option) { _, _ ->
                 val pos = viewHolder.bindingAdapterPosition
-                ridesDB.removeScooter(pos)
+                adapter.getRef(pos)
+                    .removeValue()
                 adapter.notifyItemRemoved(pos)
             }.setNegativeButton(R.string.decline_option) { _, _ ->
                 val pos = viewHolder.bindingAdapterPosition

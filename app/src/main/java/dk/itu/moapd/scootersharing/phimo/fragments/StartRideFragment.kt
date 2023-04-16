@@ -8,20 +8,21 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.phimo.models.RidesDB
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
 
 class StartRideFragment : Fragment() {
     private lateinit var ridesBinding: FragmentRidesBinding
-
-    companion object {
-        lateinit var ridesDB: RidesDB
-    }
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ridesDB = RidesDB.get(requireContext())
+
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
     }
 
     override fun onCreateView(
@@ -39,11 +40,23 @@ class StartRideFragment : Fragment() {
                 if (editTextName.text.isNotEmpty() && editTextLocation.text.isNotEmpty()) {
                     val name = editTextName.text.toString().trim()
                     val location = editTextLocation.text.toString().trim()
-                    ridesDB.addScooter(name, location)
+                    val scooter = Scooter(name, location, System.currentTimeMillis())
 
-                    val scooter = ridesDB.getCurrentScooter()
+                    auth.currentUser?.let { user ->
+                        val uid = database.reference.child("scooters")
+                            .child(user.uid)
+                            .push()
+                            .key
+
+                        uid?.let {
+                            database.reference.child("scooters")
+                                .child(user.uid)
+                                .child(it)
+                                .setValue(scooter)
+                        }
+                    }
+
                     showMessage(scooter, view)
-
                     Navigation.findNavController(view).popBackStack()
                 }
             }

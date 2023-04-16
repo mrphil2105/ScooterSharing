@@ -33,12 +33,17 @@ import java.util.*
  * @param name The name of the scooter.
  * @param location The location of the scooter.
  */
-data class Scooter(val name: String, var location: String, var timestamp: Long) {
+// Dumb null initializers below because the Firebase API cannot call a constructor with arguments :(
+data class Scooter(
+    val name: String? = null,
+    var location: String? = null,
+    var timestamp: Long? = null
+) {
     /**
      * Returns a human-readable string representation of the [timestamp].
      */
     fun getTime(): String {
-        val date = Date(timestamp)
+        val date = Date(timestamp!!)
         val format = SimpleDateFormat("yyyy/MM/dd HH:mm")
         return format.format(date)
     }

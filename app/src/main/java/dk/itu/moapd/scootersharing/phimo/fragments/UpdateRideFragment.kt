@@ -5,21 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import dk.itu.moapd.scootersharing.phimo.R
-import dk.itu.moapd.scootersharing.phimo.models.RidesDB
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
 
+// TODO: Replace this with a way to edit a specific 'Scooter' object.
 class UpdateRideFragment : Fragment() {
     private lateinit var ridesBinding: FragmentRidesBinding
 
-    companion object {
-        lateinit var ridesDB: RidesDB
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ridesDB = RidesDB.get(requireContext())
     }
 
     override fun onCreateView(
@@ -33,18 +27,6 @@ class UpdateRideFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(ridesBinding) {
-            startUpdateRideButton.setOnClickListener {
-                if (editTextName.text.isNotEmpty() && editTextLocation.text.isNotEmpty()) {
-                    val location = editTextLocation.text.toString().trim()
-                    ridesDB.updateCurrentScooter(location)
-
-                    Navigation.findNavController(view).popBackStack()
-                }
-            }
-
-            val scooter = ridesDB.getCurrentScooter()
-            editTextName.setText(scooter.name)
-            editTextLocation.setText(scooter.location)
             startUpdateRideButton.setText(R.string.update_ride_button)
         }
     }

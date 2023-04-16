@@ -8,32 +8,45 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import dk.itu.moapd.scootersharing.phimo.R
-import dk.itu.moapd.scootersharing.phimo.adapters.ScooterArrayAdapter
+import dk.itu.moapd.scootersharing.phimo.adapters.ScooterAdapter
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
 import dk.itu.moapd.scootersharing.phimo.helpers.ScooterTouchCallback
-import dk.itu.moapd.scootersharing.phimo.models.RidesDB
+import dk.itu.moapd.scootersharing.phimo.models.Scooter
 
 class MainFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
 
     private lateinit var mainBinding: FragmentMainBinding
     private lateinit var swipeHelper: ItemTouchHelper
 
     companion object {
-        lateinit var ridesDB: RidesDB
-        lateinit var adapter: ScooterArrayAdapter
+        lateinit var adapter: ScooterAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
 
-        ridesDB = RidesDB.get(requireContext())
-        val data = ridesDB.getRidesList()
-        adapter = ScooterArrayAdapter(data)
+        auth.currentUser?.let {
+            val query = database.reference.child("scooters")
+                .child(it.uid)
+                .orderByChild("createdAt")
+            val options = FirebaseRecyclerOptions.Builder<Scooter>()
+                .setQuery(query, Scooter::class.java)
+                .setLifecycleOwner(this)
+                .build()
+
+            adapter = ScooterAdapter(options) {
+                // Long press action here.
+            }
+        }
     }
 
     override fun onCreateView(
