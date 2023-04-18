@@ -27,9 +27,17 @@
         <action
             android:id="@+id/action_mainFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
+        <action
+            android:id="@+id/action_mainFragment_to_rideListFragment"
+            app:destination="@id/rideListFragment" />
     </fragment>
     <activity
         android:id="@+id/loginActivity"
         android:name="dk.itu.moapd.scootersharing.phimo.activities.LoginActivity"
         android:label="LoginActivity" />
+    <fragment
+        android:id="@+id/rideListFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.RideListFragment"
+        android:label="fragment_ride_list"
+        tools:layout="@layout/fragment_ride_list" />
 </navigation>

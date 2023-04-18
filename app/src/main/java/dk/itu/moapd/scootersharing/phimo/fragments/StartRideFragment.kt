@@ -15,6 +15,7 @@ import dk.itu.moapd.scootersharing.phimo.databinding.FragmentRidesBinding
 
 class StartRideFragment : Fragment() {
     private lateinit var ridesBinding: FragmentRidesBinding
+
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
 
