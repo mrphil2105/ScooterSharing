@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.phimo.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -27,7 +28,7 @@ class ScooterAdapter(
         }
     }
 
-    class ViewHolder(private val binding: ScooterListItemBinding) :
+    class ViewHolder(val binding: ScooterListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(scooter: Scooter) {
             binding.scooterName.text = scooter.name
