@@ -37,7 +37,8 @@ import java.util.*
 data class Scooter(
     val name: String? = null,
     var location: String? = null,
-    var timestamp: Long? = null
+    var timestamp: Long? = null,
+    var image: String? = null
 ) {
     /**
      * Returns a human-readable string representation of the [timestamp].
