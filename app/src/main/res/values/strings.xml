@@ -8,4 +8,5 @@
     <string name="location_label">Location:</string>
     <string name="accept_option">Yes</string>
     <string name="decline_option">No</string>
+    <string name="loading_location_label">Loading location…</string>
 </resources>

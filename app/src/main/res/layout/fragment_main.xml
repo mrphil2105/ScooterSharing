@@ -45,6 +45,13 @@
         android:text="@string/sign_out_button"
         android:id="@+id/sign_out_button" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/loading_location_label"
+        android:id="@+id/address_text_view" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp" />
