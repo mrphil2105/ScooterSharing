@@ -31,12 +31,16 @@ import java.util.*
  * A data class that represents a scooter with a name and location.
  *
  * @param name The name of the scooter.
- * @param location The location of the scooter.
+ * @param latitude The latitude of the scooter.
+ * @param longitude The longitude of the scooter.
+ * @param timestamp A timestamp for the last update.
+ * @param image The name of the image for the scooter.
  */
 // Dumb null initializers below because the Firebase API cannot call a constructor with arguments :(
 data class Scooter(
     val name: String? = null,
-    var location: String? = null,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
     var timestamp: Long? = null,
     var image: String? = null
 ) {
@@ -53,6 +57,7 @@ data class Scooter(
      * Returns a human-readable string with the scooter details.
      */
     override fun toString(): String {
-        return "[Scooter] $name is placed at $location. Last updated at ${getTime()}."
+        return "[Scooter] $name is placed at (latitude: $latitude, longitude: $longitude)." +
+                " Last updated at ${getTime()}."
     }
 }
