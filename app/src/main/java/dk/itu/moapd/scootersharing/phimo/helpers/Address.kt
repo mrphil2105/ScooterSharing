@@ -6,10 +6,13 @@ fun Address.toAddressString() : String {
     val address = this
     val stringBuilder = StringBuilder()
     stringBuilder.apply {
-        append(address.getAddressLine(0)).append("\n")
-        append(address.locality).append("\n")
-        append(address.postalCode).append("\n")
-        append(address.countryName)
+        append(address.thoroughfare)
+        append(" ")
+        append(address.subThoroughfare ?: featureName)
+        append(", ")
+        append(address.postalCode)
+        append(" ")
+        append(address.subLocality ?: locality)
     }
     return stringBuilder.toString()
 }
