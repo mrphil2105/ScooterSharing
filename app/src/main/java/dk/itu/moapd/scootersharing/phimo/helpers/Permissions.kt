@@ -1,23 +1,33 @@
 package dk.itu.moapd.scootersharing.phimo.helpers
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.fragment.app.Fragment
 
-private const val ALL_PERMISSIONS_RESULT = 1011;
-
-fun requestUserPermissions(activity: Activity) {
-    val permissions: ArrayList<String> = ArrayList()
-    permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-    permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-
-    val permissionsToRequest = permissionsToRequest(activity, permissions)
+fun Fragment.requestUserPermissions(
+    permissions: List<String>, callback: ((success: Boolean) -> Unit)
+) {
+    val permissionsToRequest = permissionsToRequest(requireContext(), permissions)
 
     if (permissionsToRequest.size > 0) {
-        requestPermissions(activity, permissionsToRequest.toTypedArray(), ALL_PERMISSIONS_RESULT)
+        val requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
+                var allGranted = true
+
+                for (grant in grants) {
+                    if (!grant.value) {
+                        allGranted = false
+                        break
+                    }
+                }
+
+                callback(allGranted)
+            }
+        requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
+    } else {
+        callback(true)
     }
 }
 
