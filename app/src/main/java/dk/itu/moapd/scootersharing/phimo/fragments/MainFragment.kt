@@ -1,14 +1,19 @@
 package dk.itu.moapd.scootersharing.phimo.fragments
 
+import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dk.itu.moapd.scootersharing.phimo.R
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
+import dk.itu.moapd.scootersharing.phimo.helpers.requestUserPermissions
+import dk.itu.moapd.scootersharing.phimo.services.LocationService
 
 class MainFragment : Fragment() {
     private lateinit var mainBinding: FragmentMainBinding
@@ -19,6 +24,24 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
+
+        val permissions: ArrayList<String> = ArrayList()
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        requestUserPermissions(permissions) { success ->
+            if (success) {
+                requireActivity().startService(
+                    Intent(requireContext(), LocationService::class.java)
+                )
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    "You must grant location permission for the app to function properly.",
+                    Snackbar.LENGTH_INDEFINITE
+                ).show()
+            }
+        }
     }
 
     override fun onCreateView(
