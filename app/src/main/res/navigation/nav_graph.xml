@@ -10,10 +10,6 @@
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.StartRideFragment"
         android:label="StartRideFragment" />
     <fragment
-        android:id="@+id/updateRideFragment"
-        android:name="dk.itu.moapd.scootersharing.phimo.fragments.UpdateRideFragment"
-        android:label="UpdateRideFragment" />
-    <fragment
         android:id="@+id/mainFragment"
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.MainFragment"
         android:label="fragment_main"
@@ -22,14 +18,14 @@
             android:id="@+id/action_mainFragment_to_startRideFragment"
             app:destination="@id/startRideFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_updateRideFragment"
-            app:destination="@id/updateRideFragment" />
-        <action
             android:id="@+id/action_mainFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
         <action
             android:id="@+id/action_mainFragment_to_rideListFragment"
             app:destination="@id/rideListFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addRideFragment"
+            app:destination="@id/addRideFragment" />
     </fragment>
     <activity
         android:id="@+id/loginActivity"
@@ -40,4 +36,8 @@
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.RideListFragment"
         android:label="fragment_ride_list"
         tools:layout="@layout/fragment_ride_list" />
+    <fragment
+        android:id="@+id/addRideFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.AddRideFragment"
+        android:label="AddRideFragment" />
 </navigation>
