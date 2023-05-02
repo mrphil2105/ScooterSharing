@@ -9,4 +9,6 @@
     <string name="accept_option">Yes</string>
     <string name="decline_option">No</string>
     <string name="loading_location_label">Loading location…</string>
+    <string name="location_notification_title">Location Service</string>
+    <string name="location_notification_text">Scooter Sharing is currently using your location.</string>
 </resources>

@@ -8,14 +8,26 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
+import dk.itu.moapd.scootersharing.phimo.CHANNEL_ID
+import dk.itu.moapd.scootersharing.phimo.R
+
+private const val NOTIFICATION_ID = 1
 
 class LocationService : Service() {
     private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
     private val binder = ServiceBinder()
+
+    private var isReceivingUpdates = false
+
+    var lastLatitude: Double? = null
+        private set
+    var lastLongitude: Double? = null
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -26,6 +38,9 @@ class LocationService : Service() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
+                    lastLatitude = location.latitude
+                    lastLongitude = location.longitude
+
                     val intent = Intent("location_result")
                     intent.putExtra("latitude", location.latitude)
                     intent.putExtra("longitude", location.longitude)
@@ -44,11 +59,32 @@ class LocationService : Service() {
             return START_NOT_STICKY
         }
 
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10).build()
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(getString(R.string.location_notification_title))
+            .setContentText(getString(R.string.location_notification_text))
+            .setSmallIcon(R.drawable.baseline_electric_scooter_24)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
 
-        locationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+        startForeground(NOTIFICATION_ID, notification)
+
+        if (!isReceivingUpdates) {
+            val locationRequest =
+                LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10).build()
+            locationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.myLooper()
+            )
+            isReceivingUpdates = true
+        }
 
         return START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
     override fun onBind(intent: Intent): IBinder {
