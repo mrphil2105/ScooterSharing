@@ -28,9 +28,10 @@
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
-                android:id="@+id/scooter_location"
+                android:id="@+id/scooter_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/loading_location_label"
                 android:textAppearance="?attr/textAppearanceBody1" />
 
             <TextView

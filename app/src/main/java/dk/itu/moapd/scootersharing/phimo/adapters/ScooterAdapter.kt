@@ -1,5 +1,8 @@
 package dk.itu.moapd.scootersharing.phimo.adapters
 
+import android.content.Context
+import android.location.Geocoder
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,11 +12,16 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.storage.FirebaseStorage
 import dk.itu.moapd.scootersharing.phimo.databinding.ScooterListItemBinding
+import dk.itu.moapd.scootersharing.phimo.helpers.toAddressString
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 
 class ScooterAdapter(
-    options: FirebaseRecyclerOptions<Scooter>, private val onItemClick: ((Scooter) -> Unit)
+    options: FirebaseRecyclerOptions<Scooter>,
+    private val context: Context,
+    private val onItemClick: ((Scooter) -> Unit)
 ) : FirebaseRecyclerAdapter<Scooter, ScooterAdapter.ViewHolder>(options) {
+    private val geocoder = Geocoder(context)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ScooterListItemBinding.inflate(inflater, parent, false)
@@ -41,12 +49,40 @@ class ScooterAdapter(
         }
     }
 
-    class ViewHolder(val binding: ScooterListItemBinding) :
+    inner class ViewHolder(val binding: ScooterListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(scooter: Scooter) {
-            binding.scooterName.text = scooter.name
-            binding.scooterLocation.text = scooter.location
-            binding.scooterTimestamp.text = scooter.getTime()
+            with(binding) {
+                scooterName.text = scooter.name
+                scooterTimestamp.text = scooter.getTime()
+
+                scooter.latitude?.let { latitude ->
+                    scooter.longitude?.let { longitude ->
+                        setAddress(latitude, longitude)
+                    }
+                }
+            }
+        }
+
+        private fun setAddress(latitude: Double, longitude: Double) {
+            if (Build.VERSION.SDK_INT >= 33) {
+                val geocodeListener = Geocoder.GeocodeListener { addresses ->
+                    addresses.firstOrNull()?.toAddressString()?.let { address ->
+                        with(binding) {
+                            scooterAddress.text = address
+                        }
+                    }
+                }
+                geocoder.getFromLocation(latitude, longitude, 1, geocodeListener)
+            } else {
+                geocoder.getFromLocation(latitude, longitude, 1)?.let { addresses ->
+                    addresses.firstOrNull()?.toAddressString()?.let { address ->
+                        with(binding) {
+                            scooterAddress.text = address
+                        }
+                    }
+                }
+            }
         }
     }
 }

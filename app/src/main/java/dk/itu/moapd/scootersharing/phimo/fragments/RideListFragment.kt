@@ -39,7 +39,7 @@ class RideListFragment : Fragment() {
                 .setLifecycleOwner(this)
                 .build()
 
-            adapter = ScooterAdapter(options) {
+            adapter = ScooterAdapter(options, requireContext()) {
                 // Long press action here.
             }
         }
