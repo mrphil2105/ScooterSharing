@@ -16,8 +16,8 @@ import dk.itu.moapd.scootersharing.phimo.models.Scooter
 
 class ScooterAdapter(
     options: FirebaseRecyclerOptions<Scooter>,
-    private val context: Context,
-    private val onItemClick: ((Scooter) -> Unit)
+    context: Context,
+    private val onItemClick: ((uid: String) -> Unit)
 ) : FirebaseRecyclerAdapter<Scooter, ScooterAdapter.ViewHolder>(options) {
     private val geocoder = Geocoder(context)
 
@@ -30,9 +30,9 @@ class ScooterAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int, scooter: Scooter) {
         holder.apply {
             bind(scooter)
-            itemView.setOnLongClickListener {
-                onItemClick.invoke(scooter)
-                true
+            itemView.setOnClickListener {
+                val uid = getRef(position).key
+                onItemClick.invoke(uid!!)
             }
 
             val storage = FirebaseStorage.getInstance()

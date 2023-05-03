@@ -40,7 +40,7 @@ class RideListFragment : Fragment() {
                 .build()
 
             adapter = ScooterAdapter(options, requireContext()) {
-                // Long press action here.
+                // Press action here.
             }
         }
     }
