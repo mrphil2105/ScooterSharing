@@ -25,6 +25,7 @@
                 android:id="@+id/scooter_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/loading_name_label"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
@@ -38,7 +39,8 @@
                 android:id="@+id/scooter_timestamp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:text="@string/loading_timestamp_label" />
 
         </LinearLayout>
     </LinearLayout>

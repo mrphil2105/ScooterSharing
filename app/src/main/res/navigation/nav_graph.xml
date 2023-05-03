@@ -35,7 +35,11 @@
         android:id="@+id/rideListFragment"
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.RideListFragment"
         android:label="fragment_ride_list"
-        tools:layout="@layout/fragment_ride_list" />
+        tools:layout="@layout/fragment_ride_list" >
+        <action
+            android:id="@+id/action_rideListFragment_to_startRideFragment"
+            app:destination="@id/startRideFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addRideFragment"
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.AddRideFragment"
