@@ -35,20 +35,22 @@ import java.util.*
  * @param longitude The longitude of the scooter.
  * @param timestamp A timestamp for the last update.
  * @param image The name of the image for the scooter.
+ * @param active Whether the scooter is currently in use.
  */
-// Dumb null initializers below because the Firebase API cannot call a constructor with arguments :(
+// Dumb default values below because the Firebase API cannot call a constructor with arguments :(
 data class Scooter(
     val name: String? = null,
     var latitude: Double? = null,
     var longitude: Double? = null,
-    var timestamp: Long? = null,
-    var image: String? = null
+    var timestamp: Long = 0,
+    var image: String? = null,
+    var active: Boolean = false
 ) {
     /**
      * Returns a human-readable string representation of the [timestamp].
      */
     fun getTime(): String {
-        val date = Date(timestamp!!)
+        val date = Date(timestamp)
         val format = SimpleDateFormat("yyyy/MM/dd HH:mm")
         return format.format(date)
     }
