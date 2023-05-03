@@ -2,7 +2,6 @@ package dk.itu.moapd.scootersharing.phimo.adapters
 
 import android.content.Context
 import android.location.Geocoder
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +11,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.storage.FirebaseStorage
 import dk.itu.moapd.scootersharing.phimo.databinding.ScooterListItemBinding
-import dk.itu.moapd.scootersharing.phimo.helpers.toAddressString
+import dk.itu.moapd.scootersharing.phimo.helpers.getAddressString
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 
 class ScooterAdapter(
@@ -58,27 +57,8 @@ class ScooterAdapter(
 
                 scooter.latitude?.let { latitude ->
                     scooter.longitude?.let { longitude ->
-                        setAddress(latitude, longitude)
-                    }
-                }
-            }
-        }
-
-        private fun setAddress(latitude: Double, longitude: Double) {
-            if (Build.VERSION.SDK_INT >= 33) {
-                val geocodeListener = Geocoder.GeocodeListener { addresses ->
-                    addresses.firstOrNull()?.toAddressString()?.let { address ->
-                        with(binding) {
-                            scooterAddress.text = address
-                        }
-                    }
-                }
-                geocoder.getFromLocation(latitude, longitude, 1, geocodeListener)
-            } else {
-                geocoder.getFromLocation(latitude, longitude, 1)?.let { addresses ->
-                    addresses.firstOrNull()?.toAddressString()?.let { address ->
-                        with(binding) {
-                            scooterAddress.text = address
+                        geocoder.getAddressString(latitude, longitude) { addressString ->
+                            scooterAddress.text = addressString
                         }
                     }
                 }
