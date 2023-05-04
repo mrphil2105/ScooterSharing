@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dk.itu.moapd.scootersharing.phimo.R
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMainBinding
 import dk.itu.moapd.scootersharing.phimo.helpers.requestUserPermissions
+import dk.itu.moapd.scootersharing.phimo.helpers.showError
 import dk.itu.moapd.scootersharing.phimo.services.LocationService
 
 class MainFragment : Fragment() {
@@ -35,11 +35,10 @@ class MainFragment : Fragment() {
                     Intent(requireContext(), LocationService::class.java)
                 )
             } else {
-                Snackbar.make(
-                    requireView(),
+                showError(
                     "You must grant location permission for the app to function properly.",
-                    Snackbar.LENGTH_INDEFINITE
-                ).show()
+                    true
+                )
             }
         }
     }

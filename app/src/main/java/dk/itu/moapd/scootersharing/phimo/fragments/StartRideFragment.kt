@@ -11,13 +11,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dk.itu.moapd.scootersharing.phimo.R
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentStartRideBinding
 import dk.itu.moapd.scootersharing.phimo.helpers.getAddressString
+import dk.itu.moapd.scootersharing.phimo.helpers.showError
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 import dk.itu.moapd.scootersharing.phimo.services.LocationService
 
@@ -157,8 +157,6 @@ class StartRideFragment : Fragment() {
     }
 
     private fun showDatabaseError() {
-        Snackbar.make(
-            requireView(), "Unable to load scooter from database.", Snackbar.LENGTH_LONG
-        ).show()
+        showError("Unable to load scooter from database.")
     }
 }

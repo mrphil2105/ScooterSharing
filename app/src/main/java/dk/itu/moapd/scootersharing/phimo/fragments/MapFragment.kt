@@ -22,11 +22,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dk.itu.moapd.scootersharing.phimo.R
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMapBinding
+import dk.itu.moapd.scootersharing.phimo.helpers.showError
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 import dk.itu.moapd.scootersharing.phimo.services.LocationService
 import kotlinx.coroutines.CompletableDeferred
@@ -176,8 +176,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun showDatabaseError() {
-        Snackbar.make(
-            requireView(), "Unable to load scooters from database.", Snackbar.LENGTH_LONG
-        ).show()
+        showError("Unable to load scooters from database.")
     }
 }
