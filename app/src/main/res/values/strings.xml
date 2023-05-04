@@ -6,6 +6,7 @@
     <string name="sign_out_button">Sign Out</string>
     <string name="start_ride_button">Start Ride</string>
     <string name="stop_ride_button">Stop Ride</string>
+    <string name="take_photo_button">Take Photo</string>
     <string name="accept_option">Yes</string>
     <string name="decline_option">No</string>
     <string name="name_label">Name:</string>
@@ -16,4 +17,6 @@
     <string name="location_description_label">Your current location will be used for the new scooter.</string>
     <string name="location_notification_title">Location Service</string>
     <string name="location_notification_text">Scooter Sharing is currently using your location.</string>
+    <string name="last_photo_title_label">Last photo taken by users</string>
+    <string name="last_photo_missing_label">No photo has been uploaded yet.</string>
 </resources>

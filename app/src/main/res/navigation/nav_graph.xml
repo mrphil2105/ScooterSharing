@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/startRideFragment"
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.StartRideFragment"
-        android:label="StartRideFragment" />
+        android:label="StartRideFragment" >
+        <action
+            android:id="@+id/action_startRideFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.MainFragment"
@@ -54,6 +58,15 @@
         tools:layout="@layout/fragment_map" >
         <action
             android:id="@+id/action_mapFragment_to_startRideFragment"
+            app:destination="@id/startRideFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_startRideFragment"
             app:destination="@id/startRideFragment" />
     </fragment>
 </navigation>

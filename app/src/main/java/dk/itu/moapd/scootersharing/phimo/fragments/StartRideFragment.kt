@@ -8,7 +8,10 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +23,8 @@ import dk.itu.moapd.scootersharing.phimo.helpers.getAddressString
 import dk.itu.moapd.scootersharing.phimo.helpers.showError
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 import dk.itu.moapd.scootersharing.phimo.services.LocationService
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class StartRideFragment : Fragment() {
     private lateinit var binding: FragmentStartRideBinding
@@ -34,6 +39,7 @@ class StartRideFragment : Fragment() {
     private var locationService: LocationService? = null
 
     private lateinit var uid: String
+    private var newLastPhoto: String? = null
     private var scooter: Scooter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +52,7 @@ class StartRideFragment : Fragment() {
 
         val args = requireArguments()
         uid = args.getString("uid")!!
+        newLastPhoto = args.getString("last_photo")
 
         auth.currentUser?.let { user ->
             database.reference.child("scooters")
@@ -57,8 +64,7 @@ class StartRideFragment : Fragment() {
 
                     if (value != null) {
                         scooter = value
-                        updateListItem(value)
-                        updateRideButton()
+                        updateUserInterface(value)
                     } else {
                         showDatabaseError()
                     }
@@ -92,38 +98,82 @@ class StartRideFragment : Fragment() {
         with(binding) {
             startStopRide.setOnClickListener {
                 scooter?.apply {
-                    active = !active
-                    timestamp = System.currentTimeMillis()
-
-                    // If any of these are null then the location will not be updated.
-                    locationService?.let { service ->
-                        service.lastLatitude?.let { latitude ->
-                            service.lastLongitude?.let { longitude ->
-                                this.latitude = latitude
-                                this.longitude = longitude
-                            }
-                        }
+                    if (active) {
+                        val bundle = bundleOf("uid" to uid)
+                        Navigation.findNavController(requireView())
+                            .navigate(R.id.action_startRideFragment_to_cameraFragment, bundle)
+                    } else {
+                        updateScooter()
                     }
-
-                    auth.currentUser?.let { user ->
-                        database.reference.child("scooters")
-                            .child(user.uid)
-                            .child(uid)
-                            .setValue(this)
-                    }
-
-                    updateListItem(this)
-                    updateRideButton()
                 }
+            }
+        }
+
+        // In case we've gotten back here via the back stack, then 'onCreate' has not been called.
+        // So we need to manually update the UI, but thankfully in this case 'scooter' is not null.
+        // I.e. if 'scooter' is not null, we got here via the back stack, so the fragment is reused.
+        scooter?.let { scooter ->
+            updateUserInterface(scooter)
+        }
+
+        // This is such a messy way to update the scooter after taking a picture.
+        // But I couldn't find a cleaner way to do it without also adding more verbose code.
+        // ActivityResultContracts and Fragment Results and what not.
+        // So I just used what I already know - the Navigation component with arguments on navigate.
+        // If I had more time I could've improved this.
+        if (newLastPhoto != null) {
+            lifecycleScope.launch {
+                // It is very likely null here. More ugly code :(
+                while (scooter == null) {
+                    delay(100)
+                }
+
+                updateScooter()
             }
         }
     }
 
-    private fun updateRideButton() {
+    private fun updateScooter() {
+        scooter?.apply {
+            active = !active
+            timestamp = System.currentTimeMillis()
+
+            newLastPhoto?.let { lastPhoto ->
+                this.lastPhoto = lastPhoto
+            }
+
+            // If any of these are null then the location will not be updated.
+            locationService?.let { service ->
+                service.lastLatitude?.let { latitude ->
+                    service.lastLongitude?.let { longitude ->
+                        this.latitude = latitude
+                        this.longitude = longitude
+                    }
+                }
+            }
+
+            auth.currentUser?.let { user ->
+                database.reference.child("scooters")
+                    .child(user.uid)
+                    .child(uid)
+                    .setValue(this)
+            }
+
+            updateUserInterface(this)
+        }
+    }
+
+    private fun updateUserInterface(scooter: Scooter) {
+        updateListItem(scooter)
+        updateRideButton(scooter)
+        updateLastPhotoView(scooter)
+    }
+
+    private fun updateRideButton(scooter: Scooter) {
         with(binding) {
             startStopRide.isEnabled = true
             startStopRide.text = getString(
-                if (scooter!!.active) R.string.stop_ride_button
+                if (scooter.active) R.string.stop_ride_button
                 else R.string.start_ride_button
             )
         }
@@ -153,6 +203,22 @@ class StartRideFragment : Fragment() {
                     .fitCenter()
                     .into(scooterImage)
             }
+        }
+    }
+
+    private fun updateLastPhotoView(scooter: Scooter) {
+        scooter.lastPhoto?.let { lastPhoto ->
+            val imageRef = storage.reference.child("photos/$lastPhoto")
+
+            imageRef.downloadUrl.addOnSuccessListener {
+                Glide.with(requireContext())
+                    .load(it)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(binding.lastPhoto)
+            }
+        } ?: with(binding) {
+            lastPhoto.visibility = View.GONE
+            lastPhotoMissing.visibility = View.VISIBLE
         }
     }
 

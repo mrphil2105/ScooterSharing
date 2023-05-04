@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".fragments.MainFragment">
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/list_item"
-        layout="@layout/scooter_list_item" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".fragments.StartRideFragment">
 
-    <Button
-        android:id="@+id/start_stop_ride"
-        android:layout_width="180dp"
-        android:layout_height="24pt"
-        android:layout_gravity="center_horizontal"
-        android:enabled="false"
-        android:text="@string/start_ride_button" />
+        <include
+            android:id="@+id/list_item"
+            layout="@layout/scooter_list_item" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/start_stop_ride"
+            android:layout_width="180dp"
+            android:layout_height="24pt"
+            android:layout_gravity="center_horizontal"
+            android:enabled="false"
+            android:text="@string/start_ride_button" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/last_photo_title_label"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+        <TextView
+            android:id="@+id/last_photo_missing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/last_photo_missing_label"
+            android:textAlignment="center"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/last_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+
+</ScrollView>
