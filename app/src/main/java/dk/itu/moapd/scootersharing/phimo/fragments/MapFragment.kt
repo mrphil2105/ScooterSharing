@@ -50,29 +50,26 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        auth.currentUser?.let { user ->
-            database.reference.child("scooters")
-                .child(user.uid)
-                .orderByChild("createdAt")
-                .get()
-                .addOnSuccessListener { snapshot ->
-                    val scooters = mutableMapOf<String, Scooter>()
+        database.reference.child("scooters")
+            .orderByChild("createdAt")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val scooters = mutableMapOf<String, Scooter>()
 
-                    for (childSnapshot in snapshot.children) {
-                        val scooter = childSnapshot.getValue(Scooter::class.java)
+                for (childSnapshot in snapshot.children) {
+                    val scooter = childSnapshot.getValue(Scooter::class.java)
 
-                        childSnapshot.key?.let { uid ->
-                            if (scooter != null) {
-                                scooters[uid] = scooter
-                            }
+                    childSnapshot.key?.let { scooterId ->
+                        if (scooter != null) {
+                            scooters[scooterId] = scooter
                         }
                     }
-
-                    addMapMarkers(scooters)
-                }.addOnFailureListener {
-                    showDatabaseError()
                 }
-        }
+
+                addMapMarkers(scooters)
+            }.addOnFailureListener {
+                showDatabaseError()
+            }
     }
 
     override fun onCreateView(
@@ -116,8 +113,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         googleMap.isMyLocationEnabled = true
 
         googleMap.setOnMarkerClickListener { marker ->
-            val uid = marker.tag as String
-            val bundle = bundleOf("uid" to uid)
+            val scooterId = marker.tag as String
+            val bundle = bundleOf("scooter_id" to scooterId)
             Navigation.findNavController(requireView())
                 .navigate(R.id.action_mapFragment_to_startRideFragment, bundle)
             true
@@ -140,7 +137,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             waitForGoogleMap()
 
             scooters.forEach { entry ->
-                val uid = entry.key
+                val scooterId = entry.key
                 val scooter = entry.value
 
                 scooter.latitude?.let { latitude ->
@@ -149,7 +146,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         val options = MarkerOptions()
                             .position(location)
                         val marker = googleMap.addMarker(options)
-                        marker?.tag = uid
+                        marker?.tag = scooterId
                     }
                 }
             }

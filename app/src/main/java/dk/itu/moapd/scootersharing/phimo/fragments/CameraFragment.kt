@@ -33,7 +33,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraPreview: Preview
     private lateinit var imageCapture: ImageCapture
 
-    private lateinit var uid: String
+    private lateinit var scooterId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class CameraFragment : Fragment() {
         storage = FirebaseStorage.getInstance()
 
         val args = requireArguments()
-        uid = args.getString("uid")!!
+        scooterId = args.getString("scooter_id")!!
 
         val permissions: ArrayList<String> = ArrayList()
         permissions.add(Manifest.permission.CAMERA)
@@ -86,7 +86,7 @@ class CameraFragment : Fragment() {
 
                             imageRef.putBytes(bytes, metadata).addOnSuccessListener {
                                 val navController = Navigation.findNavController(requireView())
-                                val bundle = bundleOf("uid" to uid, "last_photo" to fileName)
+                                val bundle = bundleOf("scooter_id" to scooterId, "last_photo" to fileName)
                                 val options = NavOptions.Builder()
                                     // Prevent navigation to StartRideFragment twice via back stack.
                                     .setLaunchSingleTop(true)

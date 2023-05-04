@@ -74,19 +74,19 @@ class AddRideFragment : Fragment() {
     }
 
     private fun addScooter(name: String) {
+        val currentTime = System.currentTimeMillis()
         val scooter = Scooter(
+            currentTime,
+            currentTime,
             name,
+            null,
             locationService?.lastLatitude ?: ITU_LATITUDE,
-            locationService?.lastLongitude ?: ITU_LONGITUDE,
-            System.currentTimeMillis()
+            locationService?.lastLongitude ?: ITU_LONGITUDE
         )
 
-        auth.currentUser?.let { user ->
-            database.reference.child("scooters")
-                .child(user.uid)
-                .push()
-                .setValue(scooter)
-        }
+        database.reference.child("scooters")
+            .push()
+            .setValue(scooter)
     }
 
     override fun onResume() {

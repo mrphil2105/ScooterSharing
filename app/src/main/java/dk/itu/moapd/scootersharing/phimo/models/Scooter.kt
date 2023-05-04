@@ -24,33 +24,37 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.phimo.models
 
+import com.google.firebase.database.Exclude
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * A data class that represents a scooter with a name and location.
  *
+ * @param createdAt The timestamp for the creation of the scooter.
+ * @param timestamp A timestamp for the last update.
  * @param name The name of the scooter.
+ * @param image The name of the image for the scooter.
  * @param latitude The latitude of the scooter.
  * @param longitude The longitude of the scooter.
- * @param timestamp A timestamp for the last update.
- * @param image The name of the image for the scooter.
- * @param active Whether the scooter is currently in use.
+ * @param rentedBy The user id of the current renter.
  * @param lastPhoto The last photo of the scooter taken by a user.
  */
 // Dumb default values below because the Firebase API cannot call a constructor with arguments :(
 data class Scooter(
+    val createdAt: Long = 0,
+    var timestamp: Long = 0,
     val name: String? = null,
+    var image: String? = null,
     var latitude: Double? = null,
     var longitude: Double? = null,
-    var timestamp: Long = 0,
-    var image: String? = null,
-    var active: Boolean = false,
+    var rentedBy: String? = null,
     var lastPhoto: String? = null
 ) {
     /**
      * Returns a human-readable string representation of the [timestamp].
      */
+    @Exclude
     fun getTime(): String {
         val date = Date(timestamp)
         val format = SimpleDateFormat("yyyy/MM/dd HH:mm")

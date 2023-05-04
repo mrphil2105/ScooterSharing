@@ -33,20 +33,17 @@ class RideListFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        auth.currentUser?.let {
-            val query = database.reference.child("scooters")
-                .child(it.uid)
-                .orderByChild("createdAt")
-            val options = FirebaseRecyclerOptions.Builder<Scooter>()
-                .setQuery(query, Scooter::class.java)
-                .setLifecycleOwner(this)
-                .build()
+        val query = database.reference.child("scooters")
+            .orderByChild("createdAt")
+        val options = FirebaseRecyclerOptions.Builder<Scooter>()
+            .setQuery(query, Scooter::class.java)
+            .setLifecycleOwner(this)
+            .build()
 
-            adapter = ScooterAdapter(options, requireContext()) { uid ->
-                val bundle = bundleOf("uid" to uid)
-                Navigation.findNavController(requireView())
-                    .navigate(R.id.action_rideListFragment_to_startRideFragment, bundle)
-            }
+        adapter = ScooterAdapter(options, requireContext()) { scooterId ->
+            val bundle = bundleOf("scooter_id" to scooterId)
+            Navigation.findNavController(requireView())
+                .navigate(R.id.action_rideListFragment_to_startRideFragment, bundle)
         }
     }
 

@@ -38,9 +38,41 @@ class StartRideFragment : Fragment() {
 
     private var locationService: LocationService? = null
 
-    private lateinit var uid: String
+    private lateinit var scooterId: String
     private var newLastPhoto: String? = null
     private var scooter: Scooter? = null
+
+    private val canRent: Boolean
+        get() {
+            scooter?.let { scooter ->
+                return scooter.rentedBy == null
+            }
+
+            return false
+        }
+
+    private val isRentedByUser: Boolean
+        get() {
+            auth.currentUser?.let { user ->
+                scooter?.let { scooter ->
+                    return scooter.rentedBy == user.uid
+                }
+            }
+
+            return false
+        }
+
+    private val isRentedByOther: Boolean
+        get() {
+            auth.currentUser?.let { user ->
+                scooter?.let { scooter ->
+                    return scooter.rentedBy != null && scooter.rentedBy != user.uid
+                }
+            }
+
+            // We cannot be sure if it is rented by another user or not.
+            return true
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,27 +83,24 @@ class StartRideFragment : Fragment() {
         geocoder = Geocoder(requireContext())
 
         val args = requireArguments()
-        uid = args.getString("uid")!!
+        scooterId = args.getString("scooter_id")!!
         newLastPhoto = args.getString("last_photo")
 
-        auth.currentUser?.let { user ->
-            database.reference.child("scooters")
-                .child(user.uid)
-                .child(uid)
-                .get()
-                .addOnSuccessListener { snapshot ->
-                    val value = snapshot.getValue(Scooter::class.java)
+        database.reference.child("scooters")
+            .child(scooterId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val value = snapshot.getValue(Scooter::class.java)
 
-                    if (value != null) {
-                        scooter = value
-                        updateUserInterface(value)
-                    } else {
-                        showDatabaseError()
-                    }
-                }.addOnFailureListener {
+                if (value != null) {
+                    scooter = value
+                    updateUserInterface()
+                } else {
                     showDatabaseError()
                 }
-        }
+            }.addOnFailureListener {
+                showDatabaseError()
+            }
     }
 
     override fun onCreateView(
@@ -98,12 +127,12 @@ class StartRideFragment : Fragment() {
         with(binding) {
             startStopRide.setOnClickListener {
                 scooter?.apply {
-                    if (active) {
-                        val bundle = bundleOf("uid" to uid)
+                    if (canRent) {
+                        updateScooter()
+                    } else if (!isRentedByOther) {
+                        val bundle = bundleOf("scooter_id" to scooterId)
                         Navigation.findNavController(requireView())
                             .navigate(R.id.action_startRideFragment_to_cameraFragment, bundle)
-                    } else {
-                        updateScooter()
                     }
                 }
             }
@@ -112,8 +141,8 @@ class StartRideFragment : Fragment() {
         // In case we've gotten back here via the back stack, then 'onCreate' has not been called.
         // So we need to manually update the UI, but thankfully in this case 'scooter' is not null.
         // I.e. if 'scooter' is not null, we got here via the back stack, so the fragment is reused.
-        scooter?.let { scooter ->
-            updateUserInterface(scooter)
+        if (scooter != null) {
+            updateUserInterface()
         }
 
         // This is such a messy way to update the scooter after taking a picture.
@@ -134,8 +163,10 @@ class StartRideFragment : Fragment() {
     }
 
     private fun updateScooter() {
+        val userId = auth.currentUser?.uid ?: return
+
         scooter?.apply {
-            active = !active
+            rentedBy = if (isRentedByUser) null else userId
             timestamp = System.currentTimeMillis()
 
             newLastPhoto?.let { lastPhoto ->
@@ -152,35 +183,32 @@ class StartRideFragment : Fragment() {
                 }
             }
 
-            auth.currentUser?.let { user ->
-                database.reference.child("scooters")
-                    .child(user.uid)
-                    .child(uid)
-                    .setValue(this)
-            }
+            database.reference.child("scooters")
+                .child(scooterId)
+                .setValue(this)
 
-            updateUserInterface(this)
+            updateUserInterface()
         }
     }
 
-    private fun updateUserInterface(scooter: Scooter) {
-        updateListItem(scooter)
-        updateRideButton(scooter)
-        updateLastPhotoView(scooter)
+    private fun updateUserInterface() {
+        updateListItem()
+        updateRideButton()
+        updateLastPhotoView()
     }
 
-    private fun updateRideButton(scooter: Scooter) {
+    private fun updateRideButton() {
         with(binding) {
-            startStopRide.isEnabled = true
+            startStopRide.isEnabled = !isRentedByOther
             startStopRide.text = getString(
-                if (scooter.active) R.string.stop_ride_button
-                else R.string.start_ride_button
+                if (canRent) R.string.start_ride_button
+                else R.string.stop_ride_button
             )
         }
     }
 
-    private fun updateListItem(scooter: Scooter) {
-        // TODO: Fix the code duplication between here and ScooterAdapter (maybe by using a Fragment that updates itself).
+    private fun updateListItem() {
+        val scooter = scooter ?: return
 
         with(binding.listItem) {
             scooterName.text = scooter.name
@@ -206,15 +234,22 @@ class StartRideFragment : Fragment() {
         }
     }
 
-    private fun updateLastPhotoView(scooter: Scooter) {
-        scooter.lastPhoto?.let { lastPhoto ->
-            val imageRef = storage.reference.child("photos/$lastPhoto")
+    private fun updateLastPhotoView() {
+        val scooter = scooter ?: return
 
-            imageRef.downloadUrl.addOnSuccessListener {
-                Glide.with(requireContext())
-                    .load(it)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(binding.lastPhoto)
+        scooter.lastPhoto?.let { fileName ->
+            val imageRef = storage.reference.child("photos/$fileName")
+
+            with(binding) {
+                imageRef.downloadUrl.addOnSuccessListener {
+                    Glide.with(requireContext())
+                        .load(it)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(lastPhoto)
+                }
+
+                lastPhoto.visibility = View.VISIBLE
+                lastPhotoMissing.visibility = View.GONE
             }
         } ?: with(binding) {
             lastPhoto.visibility = View.GONE
