@@ -58,6 +58,7 @@ class StartRideFragment : Fragment() {
                     if (value != null) {
                         scooter = value
                         updateListItem(value)
+                        updateRideButton()
                     } else {
                         showDatabaseError()
                     }
@@ -116,14 +117,13 @@ class StartRideFragment : Fragment() {
                 }
             }
         }
-
-        updateRideButton()
     }
 
     private fun updateRideButton() {
         with(binding) {
+            startStopRide.isEnabled = true
             startStopRide.text = getString(
-                if (scooter?.active == true) R.string.stop_ride_button
+                if (scooter!!.active) R.string.stop_ride_button
                 else R.string.start_ride_button
             )
         }
@@ -157,10 +157,6 @@ class StartRideFragment : Fragment() {
     }
 
     private fun showDatabaseError() {
-        with(binding) {
-            startStopRide.isEnabled = false
-        }
-
         Snackbar.make(
             requireView(), "Unable to load scooter from database.", Snackbar.LENGTH_LONG
         ).show()
