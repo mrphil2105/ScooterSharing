@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_mainFragment_to_addRideFragment"
             app:destination="@id/addRideFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <activity
         android:id="@+id/loginActivity"
@@ -44,4 +47,13 @@
         android:id="@+id/addRideFragment"
         android:name="dk.itu.moapd.scootersharing.phimo.fragments.AddRideFragment"
         android:label="AddRideFragment" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_startRideFragment"
+            app:destination="@id/startRideFragment" />
+    </fragment>
 </navigation>

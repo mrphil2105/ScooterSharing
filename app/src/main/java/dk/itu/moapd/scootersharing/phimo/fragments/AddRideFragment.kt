@@ -28,7 +28,6 @@ class AddRideFragment : Fragment() {
     private lateinit var geocoder: Geocoder
 
     private lateinit var locationServiceConn: ServiceConnection
-
     private var locationService: LocationService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +88,6 @@ class AddRideFragment : Fragment() {
                 .setValue(scooter)
         }
     }
-
 
     override fun onResume() {
         super.onResume()

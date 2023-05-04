@@ -65,6 +65,10 @@ class MainFragment : Fragment() {
                 navController.navigate(R.id.action_mainFragment_to_rideListFragment)
             }
 
+            ridesMap.setOnClickListener {
+                navController.navigate(R.id.action_mainFragment_to_mapFragment)
+            }
+
             signOut.setOnClickListener {
                 auth.signOut()
                 navController.navigate(R.id.action_mainFragment_to_loginActivity)
