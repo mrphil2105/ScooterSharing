@@ -55,12 +55,8 @@ class ScooterAdapter(
                 scooterName.text = scooter.name
                 scooterTimestamp.text = scooter.getTime()
 
-                scooter.latitude?.let { latitude ->
-                    scooter.longitude?.let { longitude ->
-                        geocoder.getAddressString(latitude, longitude) { addressString ->
-                            scooterAddress.text = addressString
-                        }
-                    }
+                geocoder.getAddressString(scooter.latitude, scooter.longitude) { addressString ->
+                    scooterAddress.text = addressString
                 }
             }
         }

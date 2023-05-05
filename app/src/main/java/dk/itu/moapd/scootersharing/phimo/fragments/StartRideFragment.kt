@@ -1,6 +1,8 @@
 package dk.itu.moapd.scootersharing.phimo.fragments
 
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.ServiceConnection
 import android.location.Geocoder
 import android.os.Bundle
@@ -19,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import dk.itu.moapd.scootersharing.phimo.R
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentStartRideBinding
+import dk.itu.moapd.scootersharing.phimo.helpers.BOUNDARY_KILOMETERS
+import dk.itu.moapd.scootersharing.phimo.helpers.distanceInKilometers
 import dk.itu.moapd.scootersharing.phimo.helpers.getAddressString
 import dk.itu.moapd.scootersharing.phimo.helpers.showError
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
@@ -127,6 +131,27 @@ class StartRideFragment : Fragment() {
         with(binding) {
             startStopRide.setOnClickListener {
                 scooter?.apply {
+                    locationService?.let { service ->
+                        service.lastLatitude?.let { latitude ->
+                            service.lastLongitude?.let { longitude ->
+                                val distance = distanceInKilometers(
+                                    latitude,
+                                    longitude,
+                                    initialLatitude,
+                                    initialLongitude
+                                )
+
+                                if (distance > BOUNDARY_KILOMETERS) {
+                                    showError(
+                                        "You are outside the scooter's boundary radius of $BOUNDARY_KILOMETERS" +
+                                                " km. To see your current location go to the Rides Map."
+                                    )
+                                    return@setOnClickListener
+                                }
+                            }
+                        }
+                    }
+
                     if (canRent) {
                         updateScooter()
                     } else if (!isRentedByOther) {
@@ -214,12 +239,8 @@ class StartRideFragment : Fragment() {
             scooterName.text = scooter.name
             scooterTimestamp.text = scooter.getTime()
 
-            scooter.latitude?.let { latitude ->
-                scooter.longitude?.let { longitude ->
-                    geocoder.getAddressString(latitude, longitude) { addressString ->
-                        scooterAddress.text = addressString
-                    }
-                }
+            geocoder.getAddressString(scooter.latitude, scooter.longitude) { addressString ->
+                scooterAddress.text = addressString
             }
 
             val imageRef = storage.reference.child(scooter.image ?: "generic_scooter.png")
@@ -255,6 +276,19 @@ class StartRideFragment : Fragment() {
             lastPhoto.visibility = View.GONE
             lastPhotoMissing.visibility = View.VISIBLE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val intent = Intent(requireContext(), LocationService::class.java)
+        requireActivity().bindService(intent, locationServiceConn, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        requireActivity().unbindService(locationServiceConn)
     }
 
     private fun showDatabaseError() {

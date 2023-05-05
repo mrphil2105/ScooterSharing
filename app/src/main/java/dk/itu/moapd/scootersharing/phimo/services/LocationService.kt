@@ -70,7 +70,7 @@ class LocationService : Service() {
 
         if (!isReceivingUpdates) {
             val locationRequest =
-                LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10).build()
+                LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100).build()
             locationClient.requestLocationUpdates(
                 locationRequest,
                 locationCallback,

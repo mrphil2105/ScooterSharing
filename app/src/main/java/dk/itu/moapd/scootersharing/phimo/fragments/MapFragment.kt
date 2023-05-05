@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
@@ -20,18 +21,24 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.Circle
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dk.itu.moapd.scootersharing.phimo.R
 import dk.itu.moapd.scootersharing.phimo.databinding.FragmentMapBinding
+import dk.itu.moapd.scootersharing.phimo.helpers.BOUNDARY_METERS
+import dk.itu.moapd.scootersharing.phimo.helpers.distanceInKilometers
 import dk.itu.moapd.scootersharing.phimo.helpers.showError
 import dk.itu.moapd.scootersharing.phimo.models.Scooter
 import dk.itu.moapd.scootersharing.phimo.services.LocationService
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private const val ZOOM_LEVEL = 12f
 
 class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentMapBinding
@@ -40,6 +47,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var database: FirebaseDatabase
 
     private lateinit var googleMap: GoogleMap
+    private val boundaryCircles = mutableListOf<Circle>()
 
     private lateinit var locationServiceConn: ServiceConnection
     private val locationServiceDeferred = CompletableDeferred<LocationService>()
@@ -49,27 +57,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
-
-        database.reference.child("scooters")
-            .orderByChild("createdAt")
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val scooters = mutableMapOf<String, Scooter>()
-
-                for (childSnapshot in snapshot.children) {
-                    val scooter = childSnapshot.getValue(Scooter::class.java)
-
-                    childSnapshot.key?.let { scooterId ->
-                        if (scooter != null) {
-                            scooters[scooterId] = scooter
-                        }
-                    }
-                }
-
-                addMapMarkers(scooters)
-            }.addOnFailureListener {
-                showDatabaseError()
-            }
     }
 
     override fun onCreateView(
@@ -92,6 +79,31 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        database.reference.child("scooters")
+            .orderByChild("createdAt")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val scooters = mutableMapOf<String, Scooter>()
+
+                for (childSnapshot in snapshot.children) {
+                    val scooter = childSnapshot.getValue(Scooter::class.java)
+
+                    childSnapshot.key?.let { scooterId ->
+                        if (scooter != null) {
+                            scooters[scooterId] = scooter
+                        }
+                    }
+                }
+
+                setMapMarkers(scooters)
+            }.addOnFailureListener {
+                showDatabaseError()
+            }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -120,37 +132,84 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             true
         }
 
+        googleMap.setOnCameraMoveListener {
+            updateBoundaryCircles()
+        }
+
         lifecycleScope.launch {
             val locationService = locationServiceDeferred.await()
 
             locationService.lastLatitude?.let { latitude ->
                 locationService.lastLongitude?.let { longitude ->
                     val location = LatLng(latitude, longitude)
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13f))
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, ZOOM_LEVEL))
                 }
             }
         }
     }
 
-    private fun addMapMarkers(scooters: Map<String, Scooter>) {
+    private fun setMapMarkers(scooters: Map<String, Scooter>) {
         lifecycleScope.launch {
             waitForGoogleMap()
+            googleMap.clear()
+            boundaryCircles.clear()
 
             scooters.forEach { entry ->
                 val scooterId = entry.key
                 val scooter = entry.value
 
-                scooter.latitude?.let { latitude ->
-                    scooter.longitude?.let { longitude ->
-                        val location = LatLng(latitude, longitude)
-                        val options = MarkerOptions()
-                            .position(location)
-                        val marker = googleMap.addMarker(options)
-                        marker?.tag = scooterId
-                    }
-                }
+                val location = LatLng(scooter.latitude, scooter.longitude)
+                val options = MarkerOptions()
+                    .position(location)
+                val marker = googleMap.addMarker(options)
+                marker?.tag = scooterId
+
+                val boundaryCenter =
+                    LatLng(scooter.initialLatitude, scooter.initialLongitude)
+                val circleOptions = CircleOptions()
+                    .center(boundaryCenter)
+                    .radius(BOUNDARY_METERS)
+                    .strokeWidth(2f)
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.argb(50, 255, 0, 0))
+                    .visible(false)
+                val circle = googleMap.addCircle(circleOptions)
+                boundaryCircles.add(circle)
+            }
+
+            updateBoundaryCircles()
+        }
+    }
+
+    private fun updateBoundaryCircles() {
+        val centerLocation = googleMap.cameraPosition.target
+
+        var closestCircle: Circle? = null
+        var smallestDistance = Float.MAX_VALUE
+
+        for (circle in boundaryCircles) {
+            val circleCenterLocation = circle.center
+
+            val distance = (distanceInKilometers(
+                centerLocation.latitude,
+                centerLocation.longitude,
+                circleCenterLocation.latitude,
+                circleCenterLocation.longitude
+            ) * 1000).toFloat()
+
+            if (distance < smallestDistance) {
+                closestCircle = circle
+                smallestDistance = distance
             }
         }
+
+        for (circle in boundaryCircles) {
+            if (circle != closestCircle) {
+                circle.isVisible = false
+            }
+        }
+
+        closestCircle?.isVisible = true
     }
 
     private suspend fun waitForGoogleMap() {

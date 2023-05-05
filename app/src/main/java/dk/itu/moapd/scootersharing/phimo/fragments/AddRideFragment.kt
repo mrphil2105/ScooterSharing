@@ -75,13 +75,18 @@ class AddRideFragment : Fragment() {
 
     private fun addScooter(name: String) {
         val currentTime = System.currentTimeMillis()
+        val latitude = locationService?.lastLatitude ?: ITU_LATITUDE
+        val longitude = locationService?.lastLongitude ?: ITU_LONGITUDE
+
         val scooter = Scooter(
             currentTime,
             currentTime,
             name,
             null,
-            locationService?.lastLatitude ?: ITU_LATITUDE,
-            locationService?.lastLongitude ?: ITU_LONGITUDE
+            latitude,
+            longitude,
+            latitude,
+            longitude
         )
 
         database.reference.child("scooters")

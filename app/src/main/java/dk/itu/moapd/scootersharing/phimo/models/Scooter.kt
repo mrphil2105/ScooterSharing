@@ -37,6 +37,8 @@ import java.util.*
  * @param image The name of the image for the scooter.
  * @param latitude The latitude of the scooter.
  * @param longitude The longitude of the scooter.
+ * @param initialLatitude The initial latitude of the scooter.
+ * @param initialLongitude The initial longitude of the scooter.
  * @param rentedBy The user id of the current renter.
  * @param lastPhoto The last photo of the scooter taken by a user.
  */
@@ -46,8 +48,10 @@ data class Scooter(
     var timestamp: Long = 0,
     val name: String? = null,
     var image: String? = null,
-    var latitude: Double? = null,
-    var longitude: Double? = null,
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
+    val initialLatitude: Double = 0.0,
+    val initialLongitude: Double = 0.0,
     var rentedBy: String? = null,
     var lastPhoto: String? = null
 ) {
