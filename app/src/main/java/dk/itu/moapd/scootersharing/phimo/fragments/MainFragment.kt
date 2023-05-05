@@ -68,6 +68,10 @@ class MainFragment : Fragment() {
                 navController.navigate(R.id.action_mainFragment_to_mapFragment)
             }
 
+            scanQr.setOnClickListener {
+                navController.navigate(R.id.action_mainFragment_to_qrScanFragment)
+            }
+
             signOut.setOnClickListener {
                 auth.signOut()
                 navController.navigate(R.id.action_mainFragment_to_loginActivity)

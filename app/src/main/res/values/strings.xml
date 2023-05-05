@@ -3,6 +3,7 @@
     <string name="add_ride_button">Add Ride</string>
     <string name="list_rides_button">List Rides</string>
     <string name="rides_map_button">Rides Map</string>
+    <string name="scan_qr_button">Scan QR</string>
     <string name="sign_out_button">Sign Out</string>
     <string name="start_ride_button">Start Ride</string>
     <string name="stop_ride_button">Stop Ride</string>

@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_mainFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_qrScanFragment"
+            app:destination="@id/qrScanFragment" />
     </fragment>
     <activity
         android:id="@+id/loginActivity"
@@ -67,6 +70,15 @@
         tools:layout="@layout/fragment_camera" >
         <action
             android:id="@+id/action_cameraFragment_to_startRideFragment"
+            app:destination="@id/startRideFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/qrScanFragment"
+        android:name="dk.itu.moapd.scootersharing.phimo.fragments.QrScanFragment"
+        android:label="fragment_qr_scan"
+        tools:layout="@layout/fragment_qr_scan" >
+        <action
+            android:id="@+id/action_qrScanFragment_to_startRideFragment"
             app:destination="@id/startRideFragment" />
     </fragment>
 </navigation>
