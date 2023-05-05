@@ -54,27 +54,29 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            val navController = Navigation.findNavController(view)
-
             addRide.setOnClickListener {
-                navController.navigate(R.id.action_mainFragment_to_addRideFragment)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_addRideFragment)
             }
 
             listRides.setOnClickListener {
-                navController.navigate(R.id.action_mainFragment_to_rideListFragment)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_rideListFragment)
             }
 
             ridesMap.setOnClickListener {
-                navController.navigate(R.id.action_mainFragment_to_mapFragment)
+                Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_mapFragment)
             }
 
             scanQr.setOnClickListener {
-                navController.navigate(R.id.action_mainFragment_to_qrScanFragment)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_qrScanFragment)
             }
 
             signOut.setOnClickListener {
                 auth.signOut()
-                navController.navigate(R.id.action_mainFragment_to_loginActivity)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_mainFragment_to_loginActivity)
             }
         }
     }
